@@ -1,0 +1,162 @@
+{
+    "asset": {
+        "generator": "SOLIDWORKSGLTF",
+        "version": "2.0"
+    },
+    "scene": 0,
+    "scenes": [
+        {
+            "name": "Predeterminado",
+            "nodes": [
+                0,
+                1
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "matrix": [
+                0.7452494072842423,
+                9.635338204265359e-17,
+                -0.6667858133932406,
+                0.0,
+                -0.3845316351942527,
+                0.8169599655121521,
+                -0.4297811492902141,
+                0.0,
+                0.5447373151137341,
+                0.5766943859189052,
+                0.6088389300728864,
+                0.0,
+                0.30150621820143747,
+                0.36517320414820215,
+                0.35348825882462953,
+                1.0
+            ],
+            "camera": 0,
+            "name": "current camera"
+        },
+        {
+            "mesh": 0,
+            "name": "Soporte ping 360"
+        }
+    ],
+    "cameras": [
+        {
+            "type": "orthographic",
+            "orthographic": {
+                "xmag": 0.12817842396862036,
+                "ymag": 0.09904696397575209,
+                "zfar": 0.6954346229139214,
+                "znear": 0.4369440573220608
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "primitives": [
+                {
+                    "attributes": {
+                        "POSITION": 1,
+                        "NORMAL": 2
+                    },
+                    "indices": 0,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        }
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 9426,
+            "type": "SCALAR",
+            "min": [
+                0
+            ],
+            "max": [
+                4701
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 4702,
+            "type": "VEC3",
+            "min": [
+                -0.029999999329447746,
+                -4.336808689942018e-19,
+                0.0
+            ],
+            "max": [
+                0.06310000270605087,
+                0.12700000405311584,
+                0.07000000029802322
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 4702,
+            "type": "VEC3",
+            "min": [
+                -1.0,
+                -1.0,
+                -1.0
+            ],
+            "max": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        }
+    ],
+    "materials": [
+        {
+            "name": "defaultplastic",
+            "pbrMetallicRoughness": {
+                "baseColorFactor": [
+                    0.5989418101001601,
+                    0.6455552910764322,
+                    0.8591735777059335,
+                    1.0
+                ],
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.16999999880790712
+            }
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 37704,
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 37704,
+            "byteLength": 56424,
+            "byteStride": 12,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 94128,
+            "byteLength": 56424,
+            "byteStride": 12,
+            "target": 34962
+        }
+    ],
+    "buffers": [
+        {
+            "uri": "Soporte ping 360.bin",
+            "byteLength": 150552
+        }
+    ]
+}
