@@ -4,25 +4,92 @@
     <meta charset="UTF-8">
     <title>Soporte Ping 360 | Ángel Omil</title>
     <link rel="stylesheet" href="./css/style.css">
+    <style>
+        /* Estilos específicos para esta página */
+        .project-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .tab-btn {
+            padding: 0.5rem 1rem;
+            background: #e0e0e0;
+            border: none;
+            border-radius: 4px 4px 0 0;
+            cursor: pointer;
+        }
+        .tab-btn.active {
+            background: #3498db;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+            padding: 1rem;
+            background: white;
+            border-radius: 0 0 4px 4px;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    </style>
 </head>
 <body>
     <header class="header">
-        <h1>SOPORTE PING 360</h1>
-        <a href="./index.html" class="btn">Volver al portafolio</a>
+        <div class="container">
+            <h1>SOPORTE PING 360</h1>
+            <a href="./index.html" class="btn">Volver al portafolio</a>
+        </div>
     </header>
 
-    <main class="project-detail">
-        <!-- Aquí pondremos las pestañas de Modelo 3D / Planos / Impresión -->
+    <main class="project-container">
         <div class="tabs">
-            <button class="tab-btn active">Modelo 3D</button>
-            <button class="tab-btn">Planos</button>
-            <button class="tab-btn">Impresión 3D</button>
+            <button class="tab-btn active" onclick="openTab('modelo')">Modelo 3D</button>
+            <button class="tab-btn" onclick="openTab('planos')">Planos</button>
+            <button class="tab-btn" onclick="openTab('impresion')">Impresión 3D</button>
         </div>
 
-        <div class="tab-content">
-            <!-- Contenido dinámico (lo haremos funcional luego) -->
-            <p>Aquí irá el visor 3D o las imágenes.</p>
+        <div id="modelo" class="tab-content active">
+            <h2>Modelo 3D</h2>
+            <p>Aquí irá el visor 3D interactivo.</p>
+            <!-- Espacio para el visor 3D -->
+            <div id="3d-viewer" style="width: 100%; height: 400px; background: #eee;"></div>
+        </div>
+
+        <div id="planos" class="tab-content">
+            <h2>Planos Técnicos</h2>
+            <iframe src="./assets/pdf/Soporte ping 360.pdf" style="width:100%; height:500px; border:none;"></iframe>
+        </div>
+
+        <div id="impresion" class="tab-content">
+            <h2>Impresión 3D</h2>
+            <div class="gallery">
+                <img src="./assets/img/soporte-ping-360-impresion-1.jpg" alt="Impresión 1" style="max-width:100%;">
+                <!-- Añade más imágenes si necesitas -->
+            </div>
         </div>
     </main>
+
+    <script>
+        function openTab(tabId) {
+            // Oculta todos los contenidos
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Desactiva todos los botones
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Activa el contenido y botón seleccionado
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+    </script>
 </body>
 </html>
