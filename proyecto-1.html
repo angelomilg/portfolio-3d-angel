@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <title>Soporte Ping 360 | Ángel Omil</title>
     <link rel="stylesheet" href="./css/style.css">
+    <!-- Librerías Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.min.js"></script>
     <style>
         /* Estilos específicos para esta página */
         .project-container {
@@ -22,6 +26,7 @@
             border: none;
             border-radius: 4px 4px 0 0;
             cursor: pointer;
+            font-family: 'Inter', sans-serif;
         }
         .tab-btn.active {
             background: #3498db;
@@ -32,9 +37,32 @@
             padding: 1rem;
             background: white;
             border-radius: 0 0 4px 4px;
+            border: 1px solid #ddd;
         }
         .tab-content.active {
             display: block;
+        }
+        #3d-viewer {
+            width: 100%;
+            height: 500px;
+            position: relative;
+            margin: 1rem 0;
+        }
+        #3d-container {
+            width: 100%;
+            height: 100%;
+        }
+        #loading-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #666;
+        }
+        .error-message {
+            color: #d32f2f;
+            text-align: center;
+            padding: 1rem;
         }
     </style>
 </head>
@@ -54,10 +82,12 @@
         </div>
 
         <div id="modelo" class="tab-content active">
-            <h2>Modelo 3D</h2>
-            <p>Aquí irá el visor 3D interactivo.</p>
-            <!-- Espacio para el visor 3D -->
-            <div id="3d-viewer" style="width: 100%; height: 400px; background: #eee;"></div>
+            <h2>Modelo 3D Interactivo</h2>
+            <div id="3d-viewer">
+                <div id="3d-container"></div>
+                <p id="loading-message">Cargando modelo 3D...</p>
+            </div>
+            <p>Usa el ratón para rotar, hacer zoom y mover el modelo.</p>
         </div>
 
         <div id="planos" class="tab-content">
@@ -68,13 +98,86 @@
         <div id="impresion" class="tab-content">
             <h2>Impresión 3D</h2>
             <div class="gallery">
-                <img src="./assets/img/soporte-ping-360-impresion-1.jpg" alt="Impresión 1" style="max-width:100%;">
-                <!-- Añade más imágenes si necesitas -->
+                <img src="./assets/img/soporte-ping-360-impresion-1.jpg" alt="Impresión 1" style="max-width:100%; margin-bottom:1rem;">
+                <!-- Añade más imágenes si las tienes -->
             </div>
         </div>
     </main>
 
     <script>
+        // 1. Configuración del visor 3D
+        const init3DViewer = () => {
+            const container = document.getElementById('3d-container');
+            const loadingMessage = document.getElementById('loading-message');
+            
+            // Escena
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0xf8f8f8);
+            
+            // Cámara
+            const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.z = 5;
+            
+            // Renderer
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(renderer.domElement);
+            
+            // Controles
+            const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            
+            // Iluminación
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(1, 1, 1);
+            scene.add(directionalLight);
+            
+            // Cargar modelo
+            const loader = new THREE.GLTFLoader();
+            loader.load(
+                './assets/models/tu-modelo.gltf', // ¡CAMBIAR POR TU RUTA!
+                (gltf) => {
+                    scene.add(gltf.scene);
+                    loadingMessage.style.display = 'none';
+                    
+                    // Ajustar cámara al modelo
+                    const bbox = new THREE.Box3().setFromObject(gltf.scene);
+                    const center = bbox.getCenter(new THREE.Vector3());
+                    const size = bbox.getSize(new THREE.Vector3());
+                    
+                    camera.position.copy(center);
+                    camera.position.z = size.length() * 1.5;
+                    controls.target.copy(center);
+                },
+                undefined,
+                (error) => {
+                    console.error('Error:', error);
+                    loadingMessage.textContent = 'Error al cargar el modelo 3D';
+                    loadingMessage.className = 'error-message';
+                }
+            );
+            
+            // Animación
+            const animate = () => {
+                requestAnimationFrame(animate);
+                controls.update();
+                renderer.render(scene, camera);
+            };
+            animate();
+            
+            // Redimensionado
+            window.addEventListener('resize', () => {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+        };
+
+        // 2. Funcionalidad de pestañas
         function openTab(tabId) {
             // Oculta todos los contenidos
             document.querySelectorAll('.tab-content').forEach(content => {
@@ -89,7 +192,22 @@
             // Activa el contenido y botón seleccionado
             document.getElementById(tabId).classList.add('active');
             event.currentTarget.classList.add('active');
+            
+            // Reinicia el visor 3D si se cambia a esa pestaña
+            if (tabId === 'modelo') {
+                setTimeout(() => {
+                    const container = document.getElementById('3d-container');
+                    if (container && container.children.length === 0) {
+                        init3DViewer();
+                    }
+                }, 100);
+            }
         }
+
+        // Inicializar el visor al cargar
+        document.addEventListener('DOMContentLoaded', init3DViewer);
     </script>
+</body>
+</html>
 </body>
 </html>
